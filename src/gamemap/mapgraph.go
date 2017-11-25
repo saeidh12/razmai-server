@@ -20,8 +20,16 @@ func (mg *MapGraph) fromJSON(map_json string) {
 	json.Unmarshal(bytes, mg)
 }
 
+func (mg *MapGraph) addPlayerTroopBonus(player int) {
+	for i, base := range mg.Bases {
+		if base.Occupying_player == player {
+			mg.Bases[i].Troop_count += base.Troop_bonus
+		}
+	}
+}
+
 func (mg *MapGraph) attack(from int, to int, troops int) string {
-	if mg.Bases[from].Troop_count < 2 || !inRange(from, -1, len(mg.Bases)) || !inRange(to, -1, len(mg.Bases)) || troops < 0 || from == to {
+	if mg.Bases[from].Troop_count < 2 || !inRange(from, -1, len(mg.Bases)) || !inRange(to, -1, len(mg.Bases)) || troops < 0 {
 		return "Invalid move!"
 	}
 	if inSlice(to, mg.Bases[from].Connections) < 0 {
@@ -56,10 +64,10 @@ func (mg *MapGraph) attack(from int, to int, troops int) string {
 
 func (mg MapGraph) support(from int, to int, troops int) string {
 	if mg.Bases[from].Troop_count < 2 || !inRange(from, -1, len(mg.Bases)) || !inRange(to, -1, len(mg.Bases)) || troops < 0 {
-		return "Incorrect input"
+		return "Invalid move!"
 	}
 	if inSlice(to, mg.Bases[from].Connections) < 0 {
-		return "No connection"
+		return "No connection!"
 	}
 
 	if troops >= mg.Bases[from].Troop_count {
