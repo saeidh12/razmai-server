@@ -10,17 +10,21 @@ type MapGraph struct {
 	Bases             []Base
 }
 
-func (mg MapGraph) toJSON() string {
+func (mg MapGraph) OwnsBase(base int, player int) bool {
+	return mg.Bases[base].Occupying_player == player
+}
+
+func (mg MapGraph) ToJSON() string {
 	map_json, _ := json.Marshal(mg)
 	return string(map_json)
 }
 
-func (mg *MapGraph) fromJSON(map_json string) {
+func (mg *MapGraph) FromJSON(map_json string) {
 	bytes := []byte(map_json)
 	json.Unmarshal(bytes, mg)
 }
 
-func (mg *MapGraph) addPlayerTroopBonus(player int) {
+func (mg *MapGraph) AddPlayerTroopBonus(player int) {
 	for i, base := range mg.Bases {
 		if base.Occupying_player == player {
 			mg.Bases[i].Troop_count += base.Troop_bonus
@@ -29,10 +33,10 @@ func (mg *MapGraph) addPlayerTroopBonus(player int) {
 }
 
 func (mg *MapGraph) Attack(from int, to int, troops int) string {
-	if mg.Bases[from].Troop_count < 2 || !inRange(from, -1, len(mg.Bases)) || !inRange(to, -1, len(mg.Bases)) || troops < 0 {
+	if mg.Bases[from].Troop_count < 2 || !InRange(from, -1, len(mg.Bases)) || !InRange(to, -1, len(mg.Bases)) || troops < 0 {
 		return "Invalid move!"
 	}
-	if inSlice(to, mg.Bases[from].Connections) < 0 {
+	if InSlice(to, mg.Bases[from].Connections) < 0 {
 		return "No connection!"
 	}
 
@@ -63,10 +67,10 @@ func (mg *MapGraph) Attack(from int, to int, troops int) string {
 }
 
 func (mg MapGraph) Support(from int, to int, troops int) string {
-	if mg.Bases[from].Troop_count < 2 || !inRange(from, -1, len(mg.Bases)) || !inRange(to, -1, len(mg.Bases)) || troops < 0 {
+	if mg.Bases[from].Troop_count < 2 || !InRange(from, -1, len(mg.Bases)) || !InRange(to, -1, len(mg.Bases)) || troops < 0 {
 		return "Invalid move!"
 	}
-	if inSlice(to, mg.Bases[from].Connections) < 0 {
+	if InSlice(to, mg.Bases[from].Connections) < 0 {
 		return "No connection!"
 	}
 
@@ -79,7 +83,7 @@ func (mg MapGraph) Support(from int, to int, troops int) string {
 	return ""
 }
 
-func inSlice(value int, list []int) int {
+func InSlice(value int, list []int) int {
 	for i, v := range list {
 		if v == value {
 			return i
@@ -89,4 +93,4 @@ func inSlice(value int, list []int) int {
 	return -1
 }
 
-func inRange(value, a, b int) bool { return value > a && value < b }
+func InRange(value, a, b int) bool { return value > a && value < b }
