@@ -28,7 +28,7 @@ func (mg *MapGraph) addPlayerTroopBonus(player int) {
 	}
 }
 
-func (mg *MapGraph) attack(from int, to int, troops int) string {
+func (mg *MapGraph) Attack(from int, to int, troops int) string {
 	if mg.Bases[from].Troop_count < 2 || !inRange(from, -1, len(mg.Bases)) || !inRange(to, -1, len(mg.Bases)) || troops < 0 {
 		return "Invalid move!"
 	}
@@ -62,7 +62,7 @@ func (mg *MapGraph) attack(from int, to int, troops int) string {
 	return ""
 }
 
-func (mg MapGraph) support(from int, to int, troops int) string {
+func (mg MapGraph) Support(from int, to int, troops int) string {
 	if mg.Bases[from].Troop_count < 2 || !inRange(from, -1, len(mg.Bases)) || !inRange(to, -1, len(mg.Bases)) || troops < 0 {
 		return "Invalid move!"
 	}
