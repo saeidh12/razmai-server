@@ -10,6 +10,24 @@ type MapGraph struct {
 	Bases             []Base
 }
 
+func (mg MapGraph) CopyForPlayers(players []int) MapGraph {
+	mg_copy := mg
+
+	for index, base := range mg_copy.Bases {
+		if InSlice(base.Occupying_player, players) == -1 {
+			if mg_copy.Bases[index].Troop_count <= mg_copy.Weak_delimiter {
+				mg_copy.Bases[index].Troop_count = 1
+			} else if mg_copy.Bases[index].Troop_count <= mg_copy.Medium_delimiter {
+				mg_copy.Bases[index].Troop_count = 2
+			} else {
+				mg_copy.Bases[index].Troop_count = 3
+			}
+		}
+	}
+
+	return mg_copy
+}
+
 func (mg MapGraph) OwnsBase(base int, player int) bool {
 	return mg.Bases[base].Occupying_player == player
 }
@@ -33,7 +51,7 @@ func (mg *MapGraph) AddPlayerTroopBonus(player int) {
 }
 
 func (mg *MapGraph) Attack(from, to, troops int) string {
-	if check := validateAttackSupportInput; check != "" {
+	if check := validateAttackSupportInput(from, to, troops, mg.Bases); check != "" {
 		return check
 	}
 
@@ -62,7 +80,7 @@ func (mg *MapGraph) Attack(from, to, troops int) string {
 }
 
 func (mg MapGraph) Support(from, to, troops int) string {
-	if check := validateAttackSupportInput; check != "" {
+	if check := validateAttackSupportInput(from, to, troops, mg.Bases); check != "" {
 		return check
 	}
 
@@ -81,14 +99,63 @@ func validateTroopCount(troops int, base Base) int {
 	return troops
 }
 
-func validateAttackSupportInput(from int, to int, troops int) string {
-	if mg.Bases[from].Troop_count < 2 || !InRange(from, -1, len(mg.Bases)) || !InRange(to, -1, len(mg.Bases)) || troops < 0 {
+func validateAttackSupportInput(from, to, troops int, bases []Base) string {
+	from_base_doesnt_exist := !InRange(from, -1, len(bases))
+	if from_base_doesnt_exist {
 		return "Invalid move!"
 	}
-	if InSlice(to, mg.Bases[from].Connections) < 0 {
+
+	to_base_doesnt_exist := !InRange(to, -1, len(bases))
+	if to_base_doesnt_exist {
+		return "Invalid move!"
+	}
+
+	from_base_doesnt_have_enough_troops := bases[from].Troop_count < 2
+	if from_base_doesnt_have_enough_troops {
+		return "Invalid move!"
+	}
+
+	troops_negative := troops < 0
+	if troops_negative {
+		return "Invalid move!"
+	}
+
+	to_not_connected_to_from := InSlice(to, bases[from].Connections) < 0
+
+	if to_not_connected_to_from {
 		return "No connection!"
 	}
+
+	return ""
 }
+	// s := ""
+	// if from_base_doesnt_have_enough_troops {
+	// 	s +=" T "
+	// } else {
+	// 	s +=" F "
+	// }
+	// if from_base_doesnt_exist {
+	// 	s +=" T "
+	// } else {
+	// 	s +=" F "
+	// }
+	// if to_base_doesnt_exist {
+	// 	s +=" T "
+	// } else {
+	// 	s +=" F "
+	// }
+	// if troops_negative {
+	// 	s +=" T "
+	// } else {
+	// 	s +=" F "
+	// }
+	// if to_not_connected_to_from {
+	// 	s +=" T "
+	// } else {
+	// 	s +=" F "
+	// }
+// 	return s
+// }
 
 func InSlice(value int, list []int) int {
 	for i, v := range list {
