@@ -32,17 +32,12 @@ func (mg *MapGraph) AddPlayerTroopBonus(player int) {
 	}
 }
 
-func (mg *MapGraph) Attack(from int, to int, troops int) string {
-	if mg.Bases[from].Troop_count < 2 || !InRange(from, -1, len(mg.Bases)) || !InRange(to, -1, len(mg.Bases)) || troops < 0 {
-		return "Invalid move!"
-	}
-	if InSlice(to, mg.Bases[from].Connections) < 0 {
-		return "No connection!"
+func (mg *MapGraph) Attack(from, to, troops int) string {
+	if check := validateAttackSupportInput; check != "" {
+		return check
 	}
 
-	if troops >= mg.Bases[from].Troop_count {
-		troops = mg.Bases[from].Troop_count - 1
-	}
+	troops = validateTroopCount(troops, mg.Bases[from])
 	mg.Bases[from].Troop_count -= troops
 
 	attack_force := mg.Bases[from].get_attack_strength(troops)
@@ -66,21 +61,33 @@ func (mg *MapGraph) Attack(from int, to int, troops int) string {
 	return ""
 }
 
-func (mg MapGraph) Support(from int, to int, troops int) string {
+func (mg MapGraph) Support(from, to, troops int) string {
+	if check := validateAttackSupportInput; check != "" {
+		return check
+	}
+
+	troops = validateTroopCount(troops, mg.Bases[from])
+
+	mg.Bases[from].Troop_count -= troops
+	mg.Bases[to].Troop_count += troops
+
+	return ""
+}
+
+func validateTroopCount(troops int, base Base) int {
+	if troops >= base.Troop_count || troops == 0 {
+		return base.Troop_count - 1
+	}
+	return troops
+}
+
+func validateAttackSupportInput(from int, to int, troops int) string {
 	if mg.Bases[from].Troop_count < 2 || !InRange(from, -1, len(mg.Bases)) || !InRange(to, -1, len(mg.Bases)) || troops < 0 {
 		return "Invalid move!"
 	}
 	if InSlice(to, mg.Bases[from].Connections) < 0 {
 		return "No connection!"
 	}
-
-	if troops >= mg.Bases[from].Troop_count {
-		troops = mg.Bases[from].Troop_count - 1
-	}
-	mg.Bases[from].Troop_count -= troops
-	mg.Bases[to].Troop_count += troops
-
-	return ""
 }
 
 func InSlice(value int, list []int) int {
