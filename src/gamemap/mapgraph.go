@@ -11,7 +11,16 @@ type MapGraph struct {
 }
 
 func (mg MapGraph) CopyForPlayers(players []int) MapGraph {
-	mg_copy := mg
+	mg_copy := MapGraph{
+		Number_of_players: mg.Number_of_players,
+		Weak_delimiter:    mg.Weak_delimiter,
+		Medium_delimiter:  mg.Medium_delimiter,
+		Conquer_bonus:     mg.Conquer_bonus,
+		Bases:             make([]Base, len(mg.Bases)),
+	}
+
+	copy(mg_copy.Bases, mg.Bases)
+
 
 	for index, base := range mg_copy.Bases {
 		if InSlice(base.Occupying_player, players) == -1 {
