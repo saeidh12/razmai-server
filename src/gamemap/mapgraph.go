@@ -1,6 +1,10 @@
 package gamemap
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"log"
+	"io/ioutil"
+)
 
 type MapGraph struct {
 	Number_of_players int
@@ -8,6 +12,7 @@ type MapGraph struct {
 	Medium_delimiter  int
 	Conquer_bonus     int
 	Bases             []Base
+	Edges             [][]int
 }
 
 func (mg MapGraph) CopyForPlayers(players []int) MapGraph {
@@ -17,6 +22,7 @@ func (mg MapGraph) CopyForPlayers(players []int) MapGraph {
 		Medium_delimiter:  mg.Medium_delimiter,
 		Conquer_bonus:     mg.Conquer_bonus,
 		Bases:             make([]Base, len(mg.Bases)),
+		Edges:             mg.Edges,
 	}
 
 	copy(mg_copy.Bases, mg.Bases)
@@ -137,34 +143,18 @@ func validateAttackSupportInput(from, to, troops int, bases []Base) string {
 
 	return ""
 }
-	// s := ""
-	// if from_base_doesnt_have_enough_troops {
-	// 	s +=" T "
-	// } else {
-	// 	s +=" F "
-	// }
-	// if from_base_doesnt_exist {
-	// 	s +=" T "
-	// } else {
-	// 	s +=" F "
-	// }
-	// if to_base_doesnt_exist {
-	// 	s +=" T "
-	// } else {
-	// 	s +=" F "
-	// }
-	// if troops_negative {
-	// 	s +=" T "
-	// } else {
-	// 	s +=" F "
-	// }
-	// if to_not_connected_to_from {
-	// 	s +=" T "
-	// } else {
-	// 	s +=" F "
-	// }
-// 	return s
-// }
+
+func CreateMapGraphObjectFromFile(map_file string) MapGraph {
+  fileBytes, err := ioutil.ReadFile(map_file)
+  if err != nil {
+    log.Fatal(err)
+  }
+  map_object := MapGraph{}
+  if err = json.Unmarshal(fileBytes, &map_object); err != nil {
+    log.Fatal(err)
+  }
+  return map_object
+}
 
 func InSlice(value int, list []int) int {
 	for i, v := range list {
