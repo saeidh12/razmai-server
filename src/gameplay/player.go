@@ -4,6 +4,7 @@ import "../gamemap"
 import "os/exec"
 import "encoding/json"
 import "log"
+import "io/ioutil"
 
 type Move struct {
 	From   int
@@ -17,11 +18,10 @@ type Player struct {
 	Team_index    int
 	Player_index  int
 	// AI_specs
-	Code_language string
-	Code_path     string
+	Code_name     string
 }
 
-func (p Player) GenerateMoves(Map gamemap.MapGraph, players []Player, teams [][]int, time_limit float64) []Move {
+func (p Player) GenerateMoves(Map gamemap.MapGraph, players []Player, teams [][]int, time_limit float64, ais_folder string) []Move {
 	map_json, _          := json.Marshal(Map)
 	map_json_string      := string(map_json)
 
@@ -34,14 +34,23 @@ func (p Player) GenerateMoves(Map gamemap.MapGraph, players []Player, teams [][]
 	player_json, _       := json.Marshal(p)
 	player_json_string   := string(player_json)
 
+	fileBytes, err := ioutil.ReadFile(ais_folder + p.Code_name + "/info.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	ai_info := make(map[string]interface{})
+	if err = json.Unmarshal(fileBytes, &ai_info); err != nil {
+		log.Fatal(err)
+	}
+
 	var moves_json []byte
 
-	if p.Code_language == "python3" {
-		moves_json = p.executePython3(map_json_string, player_json_string, players_json_string, teams_json_string)
+	if ai_info["language"] == "python3" {
+		moves_json = p.executePython3(map_json_string, player_json_string, players_json_string, teams_json_string, ais_folder)
 		// fmt.Printf("%s\n", moves_json)
-	} else if p.Code_language == "go" {
+	} else if ai_info["language"] == "go" {
 		// TODO: create support for GOLANG AI
-	} else if p.Code_language == "c++" {
+	} else if ai_info["language"] == "c++" {
 		// TODO: create support for C++ AI
 	} else {
 		return []Move{}
@@ -56,8 +65,8 @@ func (p Player) GenerateMoves(Map gamemap.MapGraph, players []Player, teams [][]
 	return moves
 }
 
-func (p Player) executePython3(map_json, player_json, players_json, teams_json string) []byte {
-	cmd := exec.Command("python", p.Code_path + "run.py", map_json, player_json, players_json, teams_json)
+func (p Player) executePython3(map_json, player_json, players_json, teams_json, ais_folder string) []byte {
+	cmd := exec.Command("python", ais_folder + p.Code_name + "/run.py", map_json, player_json, players_json, teams_json)
 	returned_result, err := cmd.Output()
 	if err != nil {
 		log.Fatal(err)

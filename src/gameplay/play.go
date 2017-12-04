@@ -36,19 +36,19 @@ func (game *Game) init(
   game.Player_turn         = player_turn
 }
 
-func (game *Game) PlayTurn() bool {
+func (game *Game) PlayTurn(ais_folder string) bool {
   if !game.GameEnded() && game.PlayerBaseCount(game.Player_turn) > 0 {
     game.Map.AddPlayerTroopBonus(game.Player_turn)
-    game.PlayMoves()
+    game.PlayMoves(ais_folder)
     return game.GameEnded()
   }
   return game.GameEnded()
 }
 
-func (game *Game) PlayMoves() {
+func (game *Game) PlayMoves(ais_folder string) {
   current_player := game.Players[game.Player_turn]
   team_turn := game.Teams[current_player.Team_index]
-  moves := current_player.GenerateMoves(game.Map.CopyForPlayers(team_turn), game.Players, game.Teams, game.Time_limit)
+  moves := current_player.GenerateMoves(game.Map.CopyForPlayers(team_turn), game.Players, game.Teams, game.Time_limit, ais_folder)
 
   for _, move := range moves {
 		if game.Map.OwnsBase(move.From, game.Player_turn) && move.Type == "attack" {

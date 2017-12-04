@@ -8,29 +8,27 @@ import (
   "fmt"
   "github.com/rs/cors"
   "./gamemap"
+  "./gameplay"
 )
 
-// func test(rw http.ResponseWriter, req *http.Request) {
-//   req.ParseForm()
-//   log.Println(req.Form)
-//   //LOG: map[{"test": "that"}:[]]
-//   var t test_struct
-//   for key, _ := range req.Form {
-//     log.Println(key)
-//     //LOG: {"test": "that"}
-//     err := json.Unmarshal([]byte(key), &t)
-//     if err != nil {
-//       log.Println(err.Error())
-//     }
-//   }
-//   log.Println(t.Test)
-//   //LOG: that
-// }
+const maps_folder = "./maps/"
+const ais_folder = "./AIs/"
+
+func test(rw http.ResponseWriter, req *http.Request) {
+  decoder := json.NewDecoder(req.Body)
+  var game gameplay.Game
+  err := decoder.Decode(&game)
+  if err != nil {
+      panic(err)
+  }
+  defer req.Body.Close()
+  log.Println(game)
+}
 
 func MapsList(w http.ResponseWriter, req *http.Request) {
   response := make(map[string]gamemap.MapGraph)
 
-  files, err := ioutil.ReadDir("./maps")
+  files, err := ioutil.ReadDir(maps_folder)
   if err != nil {
     log.Fatal(err)
   }
@@ -44,7 +42,7 @@ func MapsList(w http.ResponseWriter, req *http.Request) {
 }
 
 func AIsList(w http.ResponseWriter, req *http.Request) {
-  files, err := ioutil.ReadDir("./AIs")
+  files, err := ioutil.ReadDir(ais_folder)
   if err != nil {
     log.Fatal(err)
   }
@@ -63,6 +61,10 @@ func TestConnection(w http.ResponseWriter, req *http.Request) {
   json_encoder.Encode(response)
 }
 
+func HomePage(w http.ResponseWriter, req *http.Request) {
+  fmt.Fprintf(w, "<h1 style=\"text-align: center; width: 100%%; color: cornflowerblue;\">This is the RAZMAI game server</h1>")
+}
+
 func main() {
   // http.HandleFunc("/", MapsandAIsList)
   // http.HandleFunc("/test-connection", TestConnection)
@@ -71,10 +73,11 @@ func main() {
   // // http.HandleFunc("/add-map/file", test)
   // // http.HandleFunc("/add-map/json", test)
   mux := http.NewServeMux()
-  // TODO: put home link to say this is the server
-  mux.HandleFunc("/maps", MapsList)
-  mux.HandleFunc("/ais", AIsList)
+  mux.HandleFunc("/",                HomePage)
+  mux.HandleFunc("/maps",            MapsList)
+  mux.HandleFunc("/ais",             AIsList)
   mux.HandleFunc("/test-connection", TestConnection)
+  mux.HandleFunc("/test",            test)
 
   handler := cors.Default().Handler(mux)
   fmt.Println("Server running on \"http://localhost:8012/\"")
