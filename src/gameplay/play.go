@@ -11,15 +11,13 @@ type Game struct {
   Players             []Player
   Teams               [][]int
   Time_limit          float64
-  Player_turn         int
 }
 
 func (game *Game) init(
   map_json_string,
   players_json_string,
   teams_json_string string,
-  time_limit float64,
-  player_turn int) {
+  time_limit float64) {
   if err := json.Unmarshal([]byte(map_json_string), &game.Map); err != nil {
     log.Fatal(err)
   }
@@ -33,34 +31,33 @@ func (game *Game) init(
   }
 
   game.Time_limit          = time_limit
-  game.Player_turn         = player_turn
 }
 
-func (game *Game) PlayTurn(ais_folder string) bool {
-  if !game.GameEnded() && game.PlayerBaseCount(game.Player_turn) > 0 {
-    game.Map.AddPlayerTroopBonus(game.Player_turn)
-    game.PlayMoves(ais_folder)
+func (game *Game) PlayTurn(Player_turn int, ais_folder string) bool {
+  if !game.GameEnded() && game.PlayerBaseCount(Player_turn) > 0 {
+    game.Map.AddPlayerTroopBonus(Player_turn)
+    game.PlayMoves(Player_turn, ais_folder)
     return game.GameEnded()
   }
   return game.GameEnded()
 }
 
-func (game *Game) PlayMoves(ais_folder string) {
-  current_player := game.Players[game.Player_turn]
+func (game *Game) PlayMoves(Player_turn int, ais_folder string) {
+  current_player := game.Players[Player_turn]
   team_turn := game.Teams[current_player.Team_index]
   moves := current_player.GenerateMoves(game.Map.CopyForPlayers(team_turn), game.Players, game.Teams, game.Time_limit, ais_folder)
 
   for _, move := range moves {
-		if game.Map.OwnsBase(move.From, game.Player_turn) && move.Type == "attack" {
+		if game.Map.OwnsBase(move.From, Player_turn) && move.Type == "attack" {
       if outcome := game.Map.Attack(move.From, move.To, move.Troops); outcome != "" {
         fmt.Println(outcome)
       }
-		} else if game.Map.OwnsBase(move.From, game.Player_turn) && move.Type == "support" {
+		} else if game.Map.OwnsBase(move.From, Player_turn) && move.Type == "support" {
       if outcome := game.Map.Support(move.From, move.To, move.Troops); outcome != "" {
         fmt.Println(outcome)
       }
-		} else if game.Map.OwnsBase(move.From, game.Player_turn) && move.Type == "send" {
-			if game.Map.OwnsBase(move.To, game.Player_turn) {
+		} else if game.Map.OwnsBase(move.From, Player_turn) && move.Type == "send" {
+			if game.Map.OwnsBase(move.To, Player_turn) {
         if outcome := game.Map.Support(move.From, move.To, move.Troops); outcome != "" {
           fmt.Println(outcome)
         }

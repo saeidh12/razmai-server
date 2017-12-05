@@ -12,9 +12,9 @@ import (
 )
 
 const maps_folder = "./maps/"
-const ais_folder = "./AIs/"
+const ais_folder  = "./AIs/"
 
-func test(rw http.ResponseWriter, req *http.Request) {
+func testPost(w http.ResponseWriter, req *http.Request) {
   decoder := json.NewDecoder(req.Body)
   var game gameplay.Game
   err := decoder.Decode(&game)
@@ -22,7 +22,8 @@ func test(rw http.ResponseWriter, req *http.Request) {
       panic(err)
   }
   defer req.Body.Close()
-  log.Println(game)
+  json_encoder := json.NewEncoder(w)
+  json_encoder.Encode(game)
 }
 
 func MapsList(w http.ResponseWriter, req *http.Request) {
@@ -65,6 +66,25 @@ func HomePage(w http.ResponseWriter, req *http.Request) {
   fmt.Fprintf(w, "<h1 style=\"text-align: center; width: 100%%; color: cornflowerblue;\">This is the RAZMAI game server</h1>")
 }
 
+func PlayTurn(w http.ResponseWriter, req *http.Request) {
+  decoder := json.NewDecoder(req.Body)
+  var game gameplay.Game
+  err := decoder.Decode(&game)
+  if err != nil {
+      panic(err)
+  }
+  defer req.Body.Close()
+
+  gameEnded             := game.PlayTurn(0, ais_folder)
+  response              := make(map[string]interface{})
+  response["game"]       = game
+  response["game_ended"] = gameEnded
+
+
+  json_encoder := json.NewEncoder(w)
+  json_encoder.Encode(response)
+}
+
 func main() {
   // http.HandleFunc("/", MapsandAIsList)
   // http.HandleFunc("/test-connection", TestConnection)
@@ -76,8 +96,9 @@ func main() {
   mux.HandleFunc("/",                HomePage)
   mux.HandleFunc("/maps",            MapsList)
   mux.HandleFunc("/ais",             AIsList)
+  mux.HandleFunc("/play-turn",       PlayTurn)
   mux.HandleFunc("/test-connection", TestConnection)
-  mux.HandleFunc("/test",            test)
+  mux.HandleFunc("/test-post",       testPost)
 
   handler := cors.Default().Handler(mux)
   fmt.Println("Server running on \"http://localhost:8012/\"")
