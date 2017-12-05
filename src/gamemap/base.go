@@ -7,6 +7,8 @@ type Base struct {
 	Defense_bonus    float64
 	Troop_bonus      int
 	Connections      []int
+	X                int
+	Y                int
 }
 
 func (b Base) get_attack_strength(troops int) int { return int(b.Attack_bonus * float64(troops)) }
