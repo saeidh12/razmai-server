@@ -41,6 +41,20 @@ func (mg MapGraph) CopyForPlayers(players []int) MapGraph {
 	return mg_copy
 }
 
+func (mg MapGraph) Copy() MapGraph {
+	mg_copy := MapGraph{
+		Number_of_players: mg.Number_of_players,
+		Weak_delimiter:    mg.Weak_delimiter,
+		Medium_delimiter:  mg.Medium_delimiter,
+		Conquer_bonus:     mg.Conquer_bonus,
+		Bases:             make([]Base, len(mg.Bases)),
+	}
+
+	copy(mg_copy.Bases, mg.Bases)
+
+	return mg_copy
+}
+
 func (mg MapGraph) OwnsBase(base int, player int) bool {
 	return mg.Bases[base].Occupying_player == player
 }
@@ -63,16 +77,16 @@ func (mg *MapGraph) AddPlayerTroopBonus(player int) {
 	}
 }
 
-func (mg *MapGraph) Attack(from, to, troops int) string {
+func (mg *MapGraph) Attack(mg_copy MapGraph, from, to, troops int) string {
 	if check := validateAttackSupportInput(from, to, troops, mg.Bases); check != "" {
 		return check
 	}
 
-	troops = validateTroopCount(troops, mg.Bases[from])
+	troops = validateTroopCount(troops, mg_copy.Bases[from])
 	mg.Bases[from].Troop_count -= troops
 
-	attack_force := mg.Bases[from].get_attack_strength(troops)
-	defense_force := mg.Bases[to].get_defense_strength()
+	attack_force := mg_copy.Bases[from].get_attack_strength(troops)
+	defense_force := mg_copy.Bases[to].get_defense_strength()
 
 	battle_result := attack_force - defense_force
 
@@ -92,12 +106,12 @@ func (mg *MapGraph) Attack(from, to, troops int) string {
 	return ""
 }
 
-func (mg MapGraph) Support(from, to, troops int) string {
+func (mg MapGraph) Support(mg_copy MapGraph, from, to, troops int) string {
 	if check := validateAttackSupportInput(from, to, troops, mg.Bases); check != "" {
 		return check
 	}
 
-	troops = validateTroopCount(troops, mg.Bases[from])
+	troops = validateTroopCount(troops, mg_copy.Bases[from])
 
 	mg.Bases[from].Troop_count -= troops
 	mg.Bases[to].Troop_count += troops
