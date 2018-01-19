@@ -78,10 +78,12 @@ func PlayTurn(w http.ResponseWriter, req *http.Request) {
   }
   defer req.Body.Close()
 
-  gameEnded             := data.Game.PlayTurn(data.Player_turn, ais_folder)
-  response              := make(map[string]interface{})
-  response["game"]       = data.Game
-  response["game_ended"] = gameEnded
+  gameEnded                      := data.Game.PlayTurn(data.Player_turn, ais_folder)
+  response                       := make(map[string]interface{})
+  response["game"]                = data.Game
+  response["game_ended"]          = gameEnded
+  response["player_leader_board"] = data.Game.PlayerLeaderBoard()
+  response["team_leader_board"]   = data.Game.TeamLeaderBoard()
 
 
   json_encoder := json.NewEncoder(w)
