@@ -68,16 +68,19 @@ func HomePage(w http.ResponseWriter, req *http.Request) {
 
 func PlayTurn(w http.ResponseWriter, req *http.Request) {
   decoder := json.NewDecoder(req.Body)
-  var game gameplay.Game
-  err := decoder.Decode(&game)
+  var data struct {
+    Game        gameplay.Game `json:"game"`
+    Player_turn int
+  }
+  err := decoder.Decode(&data)
   if err != nil {
       panic(err)
   }
   defer req.Body.Close()
 
-  gameEnded             := game.PlayTurn(0, ais_folder)
+  gameEnded             := data.Game.PlayTurn(data.Player_turn, ais_folder)
   response              := make(map[string]interface{})
-  response["game"]       = game
+  response["game"]       = data.Game
   response["game_ended"] = gameEnded
 
 

@@ -12,7 +12,6 @@ type MapGraph struct {
 	Medium_delimiter  int
 	Conquer_bonus     int
 	Bases             []Base
-	Edges             [][]int
 }
 
 func (mg MapGraph) CopyForPlayers(players []int) MapGraph {
@@ -22,7 +21,6 @@ func (mg MapGraph) CopyForPlayers(players []int) MapGraph {
 		Medium_delimiter:  mg.Medium_delimiter,
 		Conquer_bonus:     mg.Conquer_bonus,
 		Bases:             make([]Base, len(mg.Bases)),
-		Edges:             mg.Edges,
 	}
 
 	copy(mg_copy.Bases, mg.Bases)
