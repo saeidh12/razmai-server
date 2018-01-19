@@ -13,5 +13,3 @@ type Base struct {
 
 func (b Base) get_attack_strength(troops int) int { return int(b.Attack_bonus * float64(troops)) }
 func (b Base) get_defense_strength() int          { return int(b.Defense_bonus * float64(b.Troop_count)) }
-
-// TODO: remove edges from mapgraph
