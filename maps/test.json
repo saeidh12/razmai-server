@@ -1,0 +1,38 @@
+{
+  "Number_of_players":    2,
+  "Weak_delimiter":       5,
+  "Medium_delimiter":     10,
+  "Conquer_bonus":        4,
+  "Bases": [
+    {
+      "Occupying_player": 0,
+      "Troop_count":      10,
+      "Attack_bonus":     1.0,
+      "Defense_bonus":    1.1,
+      "Troop_bonus":      5,
+      "Connections":      [1, 2],
+      "X":                -200,
+      "Y":                -100
+    },
+    {
+      "Occupying_player": 1,
+      "Troop_count":      10,
+      "Attack_bonus":     1.0,
+      "Defense_bonus":    1.1,
+      "Troop_bonus":      5,
+      "Connections":      [0, 2],
+      "X":                200,
+      "Y":                -100
+    },
+    {
+      "Occupying_player": -1,
+      "Troop_count":      2,
+      "Attack_bonus":     1.0,
+      "Defense_bonus":    1,
+      "Troop_bonus":      3,
+      "Connections":      [0, 1],
+      "X":                0,
+      "Y":                100
+    }
+  ]
+}

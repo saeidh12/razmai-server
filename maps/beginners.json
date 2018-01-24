@@ -1,0 +1,118 @@
+{
+    "Number_of_players":            2,
+    "Weak_delimiter":               5,
+    "Medium_delimiter":             15,
+    "Conquer_bonus":                4,
+    "Bases":[
+        {
+            "Occupying_player":     0,
+            "Troop_count":          2,
+            "Attack_bonus":         1,
+            "Defense_bonus":        1.2,
+            "Troop_bonus":          3,
+            "Connections":          [2, 3, 4],
+            "X":                    -200,
+            "Y":                    0
+        },
+        {
+            "Occupying_player":     1,
+            "Troop_count":          3,
+            "Attack_bonus":         1,
+            "Defense_bonus":        1.2,
+            "Troop_bonus":          3,
+            "Connections":          [8, 9, 10],
+            "X":                    200,
+            "Y":                    0
+        },
+        {
+            "Occupying_player":     -1,
+            "Troop_count":          0,
+            "Attack_bonus":         1,
+            "Defense_bonus":        1,
+            "Troop_bonus":          2,
+            "Connections":          [0, 5, 6],
+            "X":                    -100,
+            "Y":                    100
+        },
+        {
+            "Occupying_player":     -1,
+            "Troop_count":          0,
+            "Attack_bonus":         1,
+            "Defense_bonus":        1,
+            "Troop_bonus":          2,
+            "Connections":          [0, 6],
+            "X":                    -100,
+            "Y":                    0
+        },
+        {
+            "Occupying_player":     -1,
+            "Troop_count":          0,
+            "Attack_bonus":         1,
+            "Defense_bonus":        1,
+            "Troop_bonus":          2,
+            "Connections":          [0, 6, 7],
+            "X":                    -100,
+            "Y":                    -100
+        },
+        {
+            "Occupying_player":     -1,
+            "Troop_count":          0,
+            "Attack_bonus":         1,
+            "Defense_bonus":        1,
+            "Troop_bonus":          2,
+            "Connections":          [2, 8],
+            "X":                    0,
+            "Y":                    100
+        },
+        {
+            "Occupying_player":     -1,
+            "Troop_count":          0,
+            "Attack_bonus":         1.1,
+            "Defense_bonus":        1.1,
+            "Troop_bonus":          2,
+            "Connections":          [2, 3, 4, 8, 9, 10],
+            "X":                    0,
+            "Y":                    0
+        },
+        {
+            "Occupying_player":     -1,
+            "Troop_count":          0,
+            "Attack_bonus":         1,
+            "Defense_bonus":        1,
+            "Troop_bonus":          2,
+            "Connections":          [4, 10],
+            "X":                    0,
+            "Y":                    -100
+        },
+        {
+            "Occupying_player":     -1,
+            "Troop_count":          0,
+            "Attack_bonus":         1,
+            "Defense_bonus":        1,
+            "Troop_bonus":          2,
+            "Connections":          [1, 5, 6],
+            "X":                    100,
+            "Y":                    100
+        },
+        {
+            "Occupying_player":     -1,
+            "Troop_count":          0,
+            "Attack_bonus":         1,
+            "Defense_bonus":        1,
+            "Troop_bonus":          2,
+            "Connections":          [1, 6],
+            "X":                    100,
+            "Y":                    0
+        },
+        {
+            "Occupying_player":     -1,
+            "Troop_count":          0,
+            "Attack_bonus":         1,
+            "Defense_bonus":        1,
+            "Troop_bonus":          2,
+            "Connections":          [1, 6, 7],
+            "X":                    100,
+            "Y":                    -100
+        }
+    ]
+}
