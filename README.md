@@ -27,7 +27,7 @@ This route returns the list of the names of AIs available by the server.
 
 ### /play-turn
 This route recieves a json containing the the game object and the index of the player whose turn it is.
-The game object is described in the [Wiki](https://github.com/saeidh12/razmai-server/wiki).
+The game object is described in the [Wiki](https://github.com/saeidh12/razmai-server/wiki/Game-Object).
 
 The server plays the turn and returns;
 * the new game object
