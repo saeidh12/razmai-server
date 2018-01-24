@@ -35,7 +35,7 @@ func MapsList(w http.ResponseWriter, req *http.Request) {
   }
   for _, f := range files {
     name_length := len(f.Name()) - 5
-    response[f.Name()[:name_length]] = gamemap.CreateMapGraphObjectFromFile("./maps/" + f.Name())
+    response[f.Name()[:name_length]] = gamemap.CreateMapGraphObjectFromFile(maps_folder + f.Name())
   }
 
   json_encoder := json.NewEncoder(w)
