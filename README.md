@@ -1,4 +1,4 @@
-This is the server which plays the RazmAI game.
+This is the server which plays the RazmAI game. There is a gui to be used with this [here](https://github.com/saeidh12/razmai-gui).
 
 ## Prerequesets
 
@@ -38,23 +38,20 @@ The server plays the turn and returns;
 ### /test-connection
 This route just returns a boolean to endicate the server is working properly.
 
+## Adding AIs
+You can add your AIs to the server by moving their file to the ais directory in the project.
+Read the wiki on how to create your own AI.
+
+Currently supported languages:
+* Python3
+
+## Adding Maps
+You can add your Maps to the server by moving their json file to the maps directory in the project.
+Read the wiki on how to create your own map.
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+## TODOs
+* Tournament endpoints
+* Add AI support for golang
+* Add AI support for C++
 
