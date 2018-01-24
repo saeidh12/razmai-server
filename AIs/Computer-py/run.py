@@ -1,6 +1,6 @@
 import json
 import sys
-from computer import Commander
+from ai import Commander
 
 def run(argv):
     if len(argv) == 5:
