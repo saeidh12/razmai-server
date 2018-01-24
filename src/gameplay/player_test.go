@@ -103,7 +103,7 @@ func CreateMapJSON() string {
           },
           {
               "Occupying_player":     1,
-              "Troop_count":          3,
+              "Troop_count":          10,
               "Attack_bonus":         1,
               "Defense_bonus":        1.2,
               "Troop_bonus":          3,
