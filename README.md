@@ -54,4 +54,5 @@ Read the wiki on how to create your own map.
 * Tournament endpoints
 * Add AI support for golang
 * Add AI support for C++
+* Implement time limit
 
