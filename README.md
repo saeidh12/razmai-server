@@ -1,3 +1,4 @@
+# razmai-server
 This is the server which plays the RazmAI game. There is a gui to be used with this [here](https://github.com/saeidh12/razmai-gui).
 
 ## Prerequesets
