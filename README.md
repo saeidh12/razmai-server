@@ -55,4 +55,5 @@ Read the [wiki](https://github.com/saeidh12/razmai-server/wiki/Creating-Custom-M
 * Add AI support for golang
 * Add AI support for C++
 * Implement time limit
+* Add repetitive move limit to determine draw
 
