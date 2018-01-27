@@ -45,6 +45,7 @@ Read the [wiki](https://github.com/saeidh12/razmai-server/wiki/Creating-Custom-A
 
 Currently supported languages:
 * Python3
+* C++
 
 ## Adding Maps
 You can add your Maps to the server by moving their json file to the maps directory in the project.
@@ -54,7 +55,6 @@ Read the [wiki](https://github.com/saeidh12/razmai-server/wiki/Creating-Custom-M
 ## TODOs
 * Tournament endpoints
 * Add AI support for golang
-* Add AI support for C++
 * Implement time limit
 * Add repetitive move limit to determine draw
 * Add option to save and replay a game
