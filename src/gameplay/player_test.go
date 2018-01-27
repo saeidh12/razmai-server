@@ -4,8 +4,11 @@ import (
   "testing"
   "reflect"
   "../gamemap"
-"regexp"
+  "regexp"
 )
+import "encoding/json"
+import "log"
+import "io/ioutil"
 
 func CreatePlayerObject(player, team int) Player {
   return Player{
@@ -13,6 +16,24 @@ func CreatePlayerObject(player, team int) Player {
     Team_index: team,
     Player_index: player,
     Code_name: "Computer-py",
+  }
+}
+
+func CreatePlayerObjectCpp(player, team int) Player {
+  return Player{
+    Name: "Computer-py",
+    Team_index: team,
+    Player_index: player,
+    Code_name: "Computer-c++",
+  }
+}
+
+func CreatePlayerObjectGolang(player, team int) Player {
+  return Player{
+    Name: "Computer-py",
+    Team_index: team,
+    Player_index: player,
+    Code_name: "Computer-go",
   }
 }
 
@@ -39,7 +60,7 @@ func TestPlayerRemoveDuplicate(t *testing.T) {
 	}
 }
 
-func TestPlayerExecutePython3(t *testing.T) {
+func TestPlayerExecute4Py(t *testing.T) {
   player_object := CreatePlayerObject(0, 0)
 
   map_json      := CreateMapJSON()
@@ -52,11 +73,77 @@ func TestPlayerExecutePython3(t *testing.T) {
 
   expected_result := "[{\"From\": 0, \"To\": 2, \"Troop\": 0, \"Type\": \"send\"}]"
 
-  actual_result := string(player_object.executePython3(map_json, player_json, players_json, teams_json, ais_folder))
+  fileBytes, err := ioutil.ReadFile(ais_folder + player_object.Code_name + "/info.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	ai_info := make(map[string]string)
+	if err = json.Unmarshal(fileBytes, &ai_info); err != nil {
+		log.Fatal(err)
+	}
+
+  actual_result := string(player_object.execute(ai_info["command"], ai_info["file"], map_json, player_json, players_json, teams_json, ais_folder))
   if actual_result != expected_result {
 		t.Fatalf("Expected %s but got %s", expected_result, actual_result)
 	}
 }
+
+func TestPlayerExecute4Cpp(t *testing.T) {
+  player_object := CreatePlayerObjectCpp(0, 0)
+
+  map_json      := CreateMapJSON()
+
+  player_json   := CreatePlayerJSON("Computer-c++")
+
+  players_json  := CreatePlayersJSON("Computer-c++")
+
+  teams_json    := CreateTeamsJSON()
+
+  expected_result := "[{\"From\":0,\"To\":2,\"Troop\":0,\"Type\":\"send\"}]"
+
+  fileBytes, err := ioutil.ReadFile(ais_folder + player_object.Code_name + "/info.json")
+	if err != nil {
+		log.Fatal(err)
+	}
+	ai_info := make(map[string]string)
+	if err = json.Unmarshal(fileBytes, &ai_info); err != nil {
+		log.Fatal(err)
+	}
+
+  actual_result := string(player_object.execute(ai_info["command"], ai_info["file"], map_json, player_json, players_json, teams_json, ais_folder))
+  if actual_result != expected_result {
+		t.Fatalf("Expected %s but got %s", expected_result, actual_result)
+	}
+}
+
+// func TestPlayerExecute4Golang(t *testing.T) {
+//   // TODO: add Golang support
+//   player_object := CreatePlayerObject(0, 0)
+//
+//   map_json      := CreateMapJSON()
+//
+//   player_json   := CreatePlayerJSON("Computer-py")
+//
+//   players_json  := CreatePlayersJSON("Computer-py")
+//
+//   teams_json    := CreateTeamsJSON()
+//
+//   expected_result := "[{\"From\": 0, \"To\": 2, \"Troop\": 0, \"Type\": \"send\"}]"
+//
+//   fileBytes, err := ioutil.ReadFile(ais_folder + player_object.Code_name + "/info.json")
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	ai_info := make(map[string]string)
+// 	if err = json.Unmarshal(fileBytes, &ai_info); err != nil {
+// 		log.Fatal(err)
+// 	}
+//
+//   actual_result := string(player_object.execute(ai_info["command"], ai_info["file"], map_json, player_json, players_json, teams_json, ais_folder))
+//   if actual_result != expected_result {
+// 		t.Fatalf("Expected %s but got %s", expected_result, actual_result)
+// 	}
+// }
 
 func TestPlayerGenerateMoves(t *testing.T) {
   map_object            := gamemap.CreateMapGraphObjectFromFile("../../maps/beginners.json")

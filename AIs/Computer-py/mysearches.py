@@ -35,14 +35,12 @@ def construct_path(state, meta):
     action_list = list()
 
     while True:
-        action_list.append(state)
+        action_list.insert(0, state)
         row = meta.get(state)
         if row != None:
             state = row
         else:
-            break
-
-    return action_list[::-1]
+            return action_list
 
 def is_goal(state, players):
     for player in players:

@@ -10,7 +10,7 @@ def Commander(map_dict, player_dict, players_list, teams_list):
             if path:
                 from_base_index = index
                 to_base_index   = path[1]
-                troops    = 0 # base["Troop_count"]
-                type_of_command = "send" if map_dict["Bases"][to_base_index]["Occupying_player"] in target_players else "support"
+                troops          = 0 # base["Troop_count"]
+                type_of_command = "send"# if map_dict["Bases"][to_base_index]["Occupying_player"] in target_players else "support"
                 moves.append({"From": from_base_index, "To": to_base_index, "Troop": troops, "Type": type_of_command})
     return moves

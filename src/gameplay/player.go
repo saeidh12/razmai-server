@@ -38,22 +38,18 @@ func (p Player) GenerateMoves(Map gamemap.MapGraph, players []Player, teams [][]
 	if err != nil {
 		log.Fatal(err)
 	}
-	ai_info := make(map[string]interface{})
+	ai_info := make(map[string]string)
 	if err = json.Unmarshal(fileBytes, &ai_info); err != nil {
 		log.Fatal(err)
 	}
 
 	var moves_json []byte
 
-	if ai_info["language"] == "python3" {
-		moves_json = p.executePython3(map_json_string, player_json_string, players_json_string, teams_json_string, ais_folder)
+	if ai_info["language"] == "python3" || ai_info["language"] == "go" || ai_info["language"] == "c++" {
+		moves_json = p.execute(ai_info["command"], ai_info["file"], map_json_string, player_json_string, players_json_string, teams_json_string, ais_folder)
 		// fmt.Printf("%s\n", moves_json)
-	} else if ai_info["language"] == "go" {
-		// TODO: create support for GOLANG AI
-	} else if ai_info["language"] == "c++" {
-		// TODO: create support for C++ AI
 	} else {
-		return []Move{}
+		log.Fatal("Language not supported!")
 	}
 
 	var moves []Move
@@ -65,14 +61,28 @@ func (p Player) GenerateMoves(Map gamemap.MapGraph, players []Player, teams [][]
 	return moves
 }
 
-func (p Player) executePython3(map_json, player_json, players_json, teams_json, ais_folder string) []byte {
-	cmd := exec.Command("python", ais_folder + p.Code_name + "/run.py", map_json, player_json, players_json, teams_json)
+func (p Player) execute(command, file, map_json, player_json, players_json, teams_json, ais_folder string) []byte {
+	var cmd *exec.Cmd
+	if command != "" {
+		cmd = exec.Command(command, ais_folder + p.Code_name + file, map_json, player_json, players_json, teams_json)
+	} else {
+		cmd = exec.Command(ais_folder + p.Code_name + file, map_json, player_json, players_json, teams_json)
+	}
 	returned_result, err := cmd.Output()
 	if err != nil {
 		log.Fatal(err)
 	}
 	return returned_result
 }
+
+// func (p Player) executePython3(map_json, player_json, players_json, teams_json, ais_folder string) []byte {
+// 	cmd := exec.Command("python", ais_folder + p.Code_name + "/run.py", map_json, player_json, players_json, teams_json)
+// 	returned_result, err := cmd.Output()
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	return returned_result
+// }
 
 func removeDuplicates(list []Move, number_of_bases int) []Move {
 	base_exists := make([]int, number_of_bases)
