@@ -3,7 +3,8 @@ This is the server which plays the RazmAI game. There is a gui to be used with t
 
 ## Prerequesets
 
-You must have golang installed. You can find instuctions [here](https://golang.org/).
+* You must have golang installed. You can find instuctions [here](https://golang.org/).
+* [Go CORS handler](https://github.com/rs/cors) `go get github.com/rs/cors`
 
 ## Installation and Running
 
