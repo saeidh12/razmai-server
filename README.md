@@ -1,3 +1,4 @@
+# razmai-server
 This is the server which plays the RazmAI game. There is a gui to be used with this [here](https://github.com/saeidh12/razmai-gui).
 
 ## Prerequesets
@@ -27,7 +28,7 @@ This route returns the list of the names of AIs available by the server.
 
 ### /play-turn
 This route recieves a json containing the the game object and the index of the player whose turn it is.
-The game object is described in the [Wiki](https://github.com/saeidh12/razmai-server/wiki).
+The game object is described in the [Wiki](https://github.com/saeidh12/razmai-server/wiki/Game-Object).
 
 The server plays the turn and returns;
 * the new game object
@@ -40,18 +41,21 @@ This route just returns a boolean to endicate the server is working properly.
 
 ## Adding AIs
 You can add your AIs to the server by moving their file to the ais directory in the project.
-Read the wiki on how to create your own AI.
+Read the [wiki](https://github.com/saeidh12/razmai-server/wiki/Creating-Custom-AI) on how to create your own AI.
 
 Currently supported languages:
 * Python3
 
 ## Adding Maps
 You can add your Maps to the server by moving their json file to the maps directory in the project.
-Read the wiki on how to create your own map.
+Read the [wiki](https://github.com/saeidh12/razmai-server/wiki/Creating-Custom-Map) on how to create your own map.
 
 
 ## TODOs
 * Tournament endpoints
 * Add AI support for golang
 * Add AI support for C++
+* Implement time limit
+* Add repetitive move limit to determine draw
+* Add option to save and replay a game
 
