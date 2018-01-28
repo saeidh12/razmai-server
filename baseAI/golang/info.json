@@ -1,0 +1,6 @@
+{
+  "language": "go",
+  "command":  "",
+  "file":     "/run",
+  "build":    "go build -o run"
+}
