@@ -1,5 +1,6 @@
 {
   "language": "python3",
   "command":  "python",
-  "file":     "/run.py"
+  "file":     "/run.py",
+  "build":    ""
 }

@@ -1,5 +1,6 @@
 {
   "language": "c++",
   "command":  "",
-  "file":     "/run"
+  "file":     "/run",
+  "build":    "make run -B"
 }
