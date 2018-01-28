@@ -75,15 +75,6 @@ func (p Player) execute(command, file, map_json, player_json, players_json, team
 	return returned_result
 }
 
-// func (p Player) executePython3(map_json, player_json, players_json, teams_json, ais_folder string) []byte {
-// 	cmd := exec.Command("python", ais_folder + p.Code_name + "/run.py", map_json, player_json, players_json, teams_json)
-// 	returned_result, err := cmd.Output()
-// 	if err != nil {
-// 		log.Fatal(err)
-// 	}
-// 	return returned_result
-// }
-
 func removeDuplicates(list []Move, number_of_bases int) []Move {
 	base_exists := make([]int, number_of_bases)
 	new_list := []Move{}

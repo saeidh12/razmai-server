@@ -7,10 +7,9 @@ json TargetPlayers(json players_json, json my_team) {
   json target_players;
   target_players.push_back(-1);
   json::iterator i;
-  for (i = players_json.begin(); i != players_json.end(); i++) {
-    json player = *i;
-    if (player["Team_index"] != my_team)
-      target_players.push_back(player["Team_index"]);
+  for (int i = 0; i < players_json.size(); i++) {
+    if (players_json[i]["Team_index"] != my_team)
+      target_players.push_back(i);
   }
   return target_players;
 }

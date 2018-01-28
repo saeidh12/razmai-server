@@ -33,8 +33,8 @@ int main(int argc, char** argv) {
                     (istreambuf_iterator<char>()    ) );
     // cout << Map_string << endl;
     Map = json::parse(Map_string);
-    Player  = R"({"Name":"Computer-py","Team_index":0,"Player_index":0,"Code_language":"python3","Code_path":"AIs/Computer-py/"})"_json;
-    Players = R"([{"Name":"Computer-py","Team_index":0,"Player_index":0,"Code_language":"python3","Code_path":"AIs/Computer-py/"},{"Name":"Computer-py","Team_index":1,"Player_index":1,"Code_language":"python3","Code_path":"AIs/Computer-py/"}])"_json;
+    Player  = R"({"Name":"Computer-cpp","Team_index":0,"Player_index":0,"Code_path":"AIs/Computer-c++/"})"_json;
+    Players = R"([{"Name":"Computer-cpp","Team_index":0,"Player_index":0,"Code_path":"AIs/Computer-c++/"},{"Name":"Computer-cpp","Team_index":1,"Player_index":1,"Code_path":"AIs/Computer-c++/"}])"_json;
     Teams   = R"([[0],[1]])"_json;
   }
 
