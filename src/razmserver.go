@@ -80,7 +80,7 @@ func PlayTurn(w http.ResponseWriter, req *http.Request) {
 
   gameEnded                      := data.Game.PlayTurn(data.Player_turn, ais_folder)
   response                       := make(map[string]interface{})
-  response["game"]                = data.Game.Turns[len(data.Game.Turns) - 1]
+  response["newturn"]             = data.Game.Turns[len(data.Game.Turns) - 1]
   response["game_ended"]          = gameEnded
   response["player_leader_board"] = data.Game.PlayerLeaderBoard()
   response["team_leader_board"]   = data.Game.TeamLeaderBoard()
