@@ -8,13 +8,13 @@ import (
 
 func main() {
   args := os.Args
-  var mapgraph MapGraph
+  var turns []MapGraph
   var player Player
   var players []Player
   var teams [][]int
 
   if len(args) == 5 {
-    err := json.Unmarshal([]byte(args[1]), &mapgraph)
+    err := json.Unmarshal([]byte(args[1]), &turns)
     if err != nil {
         panic(err)
     }
@@ -34,7 +34,7 @@ func main() {
         panic(err)
     }
 
-    j, err := json.Marshal(Commander(mapgraph, player, players, teams))
+    j, err := json.Marshal(Commander(turns, player, players, teams))
     if err != nil {
         panic(err)
     }

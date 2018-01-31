@@ -7,18 +7,19 @@ import "sort"
 import "fmt"
 
 type Game struct {
-  Map                 gamemap.MapGraph
-  Players             []Player
-  Teams               [][]int
-  Time_limit          float64
+  Turns           []gamemap.MapGraph
+  Players         []Player
+  Teams           [][]int
+  Time_limit      float64
+  Max_moves       int
 }
 
 func (game *Game) init(
-  map_json_string,
+  turns_json_string,
   players_json_string,
   teams_json_string string,
   time_limit float64) {
-  if err := json.Unmarshal([]byte(map_json_string), &game.Map); err != nil {
+  if err := json.Unmarshal([]byte(turns_json_string), &game.Turns); err != nil {
     log.Fatal(err)
   }
 
@@ -35,7 +36,6 @@ func (game *Game) init(
 
 func (game *Game) PlayTurn(Player_turn int, ais_folder string) bool {
   if !game.GameEnded() && game.PlayerBaseCount(Player_turn) > 0 {
-    game.Map.AddPlayerTroopBonus(Player_turn)
     game.PlayMoves(Player_turn, ais_folder)
     return game.GameEnded()
   }
@@ -43,31 +43,36 @@ func (game *Game) PlayTurn(Player_turn int, ais_folder string) bool {
 }
 
 func (game *Game) PlayMoves(Player_turn int, ais_folder string) {
+  turn           := len(game.Turns)
   current_player := game.Players[Player_turn]
-  team_turn := game.Teams[current_player.Team_index]
-  moves := current_player.GenerateMoves(game.Map.CopyForPlayers(team_turn), game.Players, game.Teams, game.Time_limit, ais_folder)
-  mg_copy := game.Map.Copy()
+  moves          := current_player.GenerateMoves(game.Turns4player(current_player), game.Players, game.Teams, game.Time_limit, ais_folder)
+  mg_copy        := game.Turns[turn - 1].Copy()
+  game.Turns      = append(game.Turns, mg_copy)
+  game.Turns[turn].AddPlayerTroopBonus(Player_turn)
 
   for _, move := range moves {
-		if game.Map.OwnsBase(move.From, Player_turn) && move.Type == "attack" {
-      if outcome := game.Map.Attack(mg_copy, move.From, move.To, move.Troops); outcome != "" {
-        fmt.Println(outcome)
-      }
-		} else if game.Map.OwnsBase(move.From, Player_turn) && move.Type == "support" {
-      if outcome := game.Map.Support(mg_copy, move.From, move.To, move.Troops); outcome != "" {
-        fmt.Println(outcome)
-      }
-		} else if game.Map.OwnsBase(move.From, Player_turn) && move.Type == "send" {
-			if game.Map.OwnsBase(move.To, Player_turn) {
-        if outcome := game.Map.Support(mg_copy, move.From, move.To, move.Troops); outcome != "" {
+    if game.Turns[turn].OwnsBase(move.From, Player_turn) {
+      if move.Type == "attack" {
+        if outcome := game.Turns[turn].Attack(mg_copy, move.From, move.To, move.Troops); outcome != "" {
           fmt.Println(outcome)
         }
-			} else {
-				if outcome := game.Map.Attack(mg_copy, move.From, move.To, move.Troops); outcome != "" {
+  		} else if move.Type == "support" {
+        if outcome := game.Turns[turn].Support(mg_copy, move.From, move.To, move.Troops); outcome != "" {
           fmt.Println(outcome)
         }
-			}
-		}
+  		} else if move.Type == "send" {
+  			if game.Turns[turn].OwnsBase(move.To, Player_turn) {
+          if outcome := game.Turns[turn].Support(mg_copy, move.From, move.To, move.Troops); outcome != "" {
+            fmt.Println(outcome)
+          }
+  			} else {
+  				if outcome := game.Turns[turn].Attack(mg_copy, move.From, move.To, move.Troops); outcome != "" {
+            fmt.Println(outcome)
+          }
+  			}
+  		}
+    }
+
 	}
 }
 
@@ -101,8 +106,9 @@ func (game Game) TeamBaseCount(team int) int {
 
 func (game Game) PlayerBaseCount(player int) int {
   player_base_count := 0
+  turn           := len(game.Turns) - 1
 
-  for _, base := range game.Map.Bases {
+  for _, base := range game.Turns[turn].Bases {
     if base.Occupying_player == player {
       player_base_count++
     }
@@ -122,4 +128,13 @@ func (game Game) GameEnded() bool {
     }
   }
   return true
+}
+
+func (game Game) Turns4player(current_player Player) []gamemap.MapGraph {
+  team_turn      := game.Teams[current_player.Team_index]
+  var newTurns []gamemap.MapGraph
+  for _, Map := range game.Turns {
+    newTurns = append(newTurns, Map.CopyForPlayers(team_turn))
+  }
+  return newTurns
 }

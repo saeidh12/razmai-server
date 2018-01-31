@@ -11,13 +11,15 @@ func TargetPlayers(Players []Player, my_team int) []int {
   return target_players
 }
 
-func Commander(mapgraph MapGraph, player Player, players []Player, teams [][]int) []map[string]interface{}  {
+func Commander(turns []MapGraph, player Player, players []Player, teams [][]int) []map[string]interface{}  {
+  current_turn   := len(turns) - 1
   target_players := TargetPlayers(players, player.Team_index)
 
-  var moves []map[string]interface{}
-  for index, value := range mapgraph.Bases {
+  bases       := turns[current_turn].Bases
+  var moves   []map[string]interface{}
+  for index, value := range bases {
     if value.Occupying_player == player.Player_index {
-      path := BFS(index, mapgraph.Bases, target_players)
+      path := BFS(index, bases, target_players)
       if len(path) > 1 {
         var m = map[string]interface{}{
         	"From":    index,

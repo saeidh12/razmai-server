@@ -8,13 +8,13 @@ import (
 
 func main() {
   args := os.Args
-  var mapgraph MapGraph
+  var turns []MapGraph
   var player Player
   var players []Player
   var teams [][]int
 
   if len(args) == 5 {
-    err := json.Unmarshal([]byte(args[1]), &mapgraph)
+    err := json.Unmarshal([]byte(args[1]), &turns)
     if err != nil {
         panic(err)
     }
@@ -35,6 +35,7 @@ func main() {
     }
 
   } else {
+    var mapgraph MapGraph
     fileBytes, err := ioutil.ReadFile(args[1])
     if err != nil {
       panic(err)
@@ -42,6 +43,8 @@ func main() {
     if err = json.Unmarshal(fileBytes, &mapgraph); err != nil {
       panic(err)
     }
+
+    turns = append([]MapGraph{}, mapgraph)
 
     err = json.Unmarshal(
       []byte(`{"Name":"Computer-go","Team_index":0,"Player_index":0,"Code_path":"AIs/Computer-go/"}`),
@@ -64,11 +67,9 @@ func main() {
         panic(err)
     }
   }
-  j, err := json.Marshal(Commander(mapgraph, player, players, teams))
+  j, err := json.Marshal(Commander(turns, player, players, teams))
   if err != nil {
       panic(err)
   }
   os.Stdout.Write(j)
-
-
 }

@@ -14,12 +14,13 @@ json TargetPlayers(json players_json, json my_team) {
   return target_players;
 }
 
-json Commander(json map_json, json player_json, json players_json, json teams_json) {
-  int my_team = player_json["Team_index"];
+json Commander(json turns_json, json player_json, json players_json, json teams_json) {
+  int my_team         = player_json["Team_index"];
+  int current_turn    = turns_json.size() - 1;
   json target_players = TargetPlayers(players_json, my_team);
 
   json moves;
-  json bases = map_json["Bases"];
+  json bases = turns_json[current_turn]["Bases"];
   for (int i = 0; i < bases.size(); i++)
     if (bases[i]["Occupying_player"] == player_json["Player_index"]) {
       json path = BFS(i, bases, target_players);

@@ -63,7 +63,7 @@ func TestPlayerRemoveDuplicate(t *testing.T) {
 func TestPlayerExecute4Py(t *testing.T) {
   player_object := CreatePlayerObject(0, 0)
 
-  map_json      := CreateMapJSON()
+  turns_json      := CreateTurnsJSON()
 
   player_json   := CreatePlayerJSON("Computer-py")
 
@@ -82,7 +82,7 @@ func TestPlayerExecute4Py(t *testing.T) {
 		log.Fatal(err)
 	}
 
-  actual_result := string(player_object.execute(ai_info["command"], ai_info["file"], map_json, player_json, players_json, teams_json, ais_folder))
+  actual_result := string(player_object.execute(ai_info["command"], ai_info["file"], turns_json, player_json, players_json, teams_json, ais_folder))
   if actual_result != expected_result {
 		t.Fatalf("Expected %s but got %s", expected_result, actual_result)
 	}
@@ -91,7 +91,7 @@ func TestPlayerExecute4Py(t *testing.T) {
 func TestPlayerExecute4Cpp(t *testing.T) {
   player_object := CreatePlayerObjectCpp(0, 0)
 
-  map_json      := CreateMapJSON()
+  turns_json      := CreateTurnsJSON()
 
   player_json   := CreatePlayerJSON("Computer-c++")
 
@@ -110,7 +110,7 @@ func TestPlayerExecute4Cpp(t *testing.T) {
 		log.Fatal(err)
 	}
 
-  actual_result := string(player_object.execute(ai_info["command"], ai_info["file"], map_json, player_json, players_json, teams_json, ais_folder))
+  actual_result := string(player_object.execute(ai_info["command"], ai_info["file"], turns_json, player_json, players_json, teams_json, ais_folder))
   if actual_result != expected_result {
 		t.Fatalf("Expected %s but got %s", expected_result, actual_result)
 	}
@@ -119,7 +119,7 @@ func TestPlayerExecute4Cpp(t *testing.T) {
 func TestPlayerExecute4Golang(t *testing.T) {
   player_object := CreatePlayerObjectGolang(0, 0)
 
-  map_json      := CreateMapJSON()
+  turns_json      := CreateTurnsJSON()
 
   player_json   := CreatePlayerJSON("Computer-go")
 
@@ -138,7 +138,7 @@ func TestPlayerExecute4Golang(t *testing.T) {
 		log.Fatal(err)
 	}
 
-  actual_result := string(player_object.execute(ai_info["command"], ai_info["file"], map_json, player_json, players_json, teams_json, ais_folder))
+  actual_result := string(player_object.execute(ai_info["command"], ai_info["file"], turns_json, player_json, players_json, teams_json, ais_folder))
   if actual_result != expected_result {
 		t.Fatalf("Expected %s but got %s", expected_result, actual_result)
 	}
@@ -162,11 +162,15 @@ func TestPlayerGenerateMoves(t *testing.T) {
       Type:   "send",
     },
   }
-  actual_result := player_object.GenerateMoves(map_object, players, teams, 20.0, ais_folder)
+  actual_result := player_object.GenerateMoves(append([]gamemap.MapGraph{}, map_object), players, teams, 20.0, ais_folder)
 
   if !reflect.DeepEqual(actual_result, expected_result) {
 		t.Fatalf("Expected %v but got %v", expected_result, actual_result)
 	}
+}
+
+func CreateTurnsJSON() string {
+  return "[" + CreateMapJSON() + "]"
 }
 
 func CreateMapJSON() string {

@@ -20,7 +20,7 @@ func CreateGameObject(map_file string) Game {
   teams                 := [][]int{[]int{0},[]int{1},}
 
   return Game{
-    Map:                 map_object,
+    Turns:               append([]gamemap.MapGraph{}, map_object),
     Players:             players,
     Teams:               teams,
     Time_limit:          0.5,
@@ -32,7 +32,7 @@ func TestPlayInit(t *testing.T) {
 
   actual_result   := Game{}
   actual_result.init(
-    CreateMapJSON(),
+    CreateTurnsJSON(),
     CreatePlayersJSON("Computer-py"),
     CreateTeamsJSON(),
     0.5,
@@ -107,6 +107,7 @@ func TestPlayTeamLeaderBoard(t *testing.T) {
 
 func TestPlayPlayMoves(t *testing.T) {
   game            := CreateGameObject(maps_folder + "beginners.json")
+  turn            := len(game.Turns)
   game.PlayMoves(0, ais_folder)
 
   actual_result   := game.PlayerBaseCount(0)
@@ -127,13 +128,13 @@ func TestPlayPlayMoves(t *testing.T) {
     t.Fatalf("Expected %v but got %v", expected_result, actual_result)
   }
 
-  actual_result   = game.Map.Bases[2].Troop_count
-  expected_result = 5 // plus conquer bonus
+  actual_result   = game.Turns[turn].Bases[2].Troop_count
+  expected_result = 8 // plus conquer bonus
   if actual_result != expected_result {
     t.Fatalf("Expected %v but got %v", expected_result, actual_result)
   }
 
-  actual_result   = game.Map.Bases[0].Troop_count
+  actual_result   = game.Turns[turn].Bases[0].Troop_count
   expected_result = 1
   if actual_result != expected_result {
     t.Fatalf("Expected %v but got %v", expected_result, actual_result)

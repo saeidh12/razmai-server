@@ -7,16 +7,16 @@ using json = nlohmann::json;
 
 
 int main(int argc, char** argv) {
-  json Map, Player, Players, Teams;
+  json Turns, Player, Players, Teams;
 
 
   if (argc == 5) {
-    Map     = json::parse(argv[1]);
+    Turns   = json::parse(argv[1]);
     Player  = json::parse(argv[2]);
     Players = json::parse(argv[3]);
     Teams   = json::parse(argv[4]);
 
-    json moves = Commander(Map, Player, Players, Teams);
+    json moves = Commander(Turns, Player, Players, Teams);
 
     cout << moves;
   }

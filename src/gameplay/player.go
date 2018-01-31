@@ -21,9 +21,9 @@ type Player struct {
 	Code_name     string
 }
 
-func (p Player) GenerateMoves(Map gamemap.MapGraph, players []Player, teams [][]int, time_limit float64, ais_folder string) []Move {
-	map_json, _          := json.Marshal(Map)
-	map_json_string      := string(map_json)
+func (p Player) GenerateMoves(turns []gamemap.MapGraph, players []Player, teams [][]int, time_limit float64, ais_folder string) []Move {
+	turns_json, _          := json.Marshal(turns)
+	turns_json_string      := string(turns_json)
 
 	players_json, _      := json.Marshal(players)
 	players_json_string  := string(players_json)
@@ -46,7 +46,7 @@ func (p Player) GenerateMoves(Map gamemap.MapGraph, players []Player, teams [][]
 	var moves_json []byte
 
 	if ai_info["language"] == "python3" || ai_info["language"] == "go" || ai_info["language"] == "c++" {
-		moves_json = p.execute(ai_info["command"], ai_info["file"], map_json_string, player_json_string, players_json_string, teams_json_string, ais_folder)
+		moves_json = p.execute(ai_info["command"], ai_info["file"], turns_json_string, player_json_string, players_json_string, teams_json_string, ais_folder)
 		// fmt.Printf("%s\n", moves_json)
 	} else {
 		log.Fatal("Language not supported!")
@@ -56,17 +56,17 @@ func (p Player) GenerateMoves(Map gamemap.MapGraph, players []Player, teams [][]
 	if err := json.Unmarshal(moves_json, &moves); err != nil {
     log.Fatal(err)
   }
-	moves = removeDuplicates(moves, len(Map.Bases))
+	moves = removeDuplicates(moves, len(turns[0].Bases))
 
 	return moves
 }
 
-func (p Player) execute(command, file, map_json, player_json, players_json, teams_json, ais_folder string) []byte {
+func (p Player) execute(command, file, turns_json, player_json, players_json, teams_json, ais_folder string) []byte {
 	var cmd *exec.Cmd
 	if command != "" {
-		cmd = exec.Command(command, ais_folder + p.Code_name + file, map_json, player_json, players_json, teams_json)
+		cmd = exec.Command(command, ais_folder + p.Code_name + file, turns_json, player_json, players_json, teams_json)
 	} else {
-		cmd = exec.Command(ais_folder + p.Code_name + file, map_json, player_json, players_json, teams_json)
+		cmd = exec.Command(ais_folder + p.Code_name + file, turns_json, player_json, players_json, teams_json)
 	}
 	returned_result, err := cmd.Output()
 	if err != nil {
