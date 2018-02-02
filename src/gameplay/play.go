@@ -117,6 +117,9 @@ func (game Game) PlayerBaseCount(player int) int {
 }
 
 func (game Game) GameEnded() bool {
+  if len(game.Turns) == game.Max_moves {
+    return true
+  }
   number_of_active_teams := 0
   for i := 0; i < len(game.Teams); i++ {
     if game.TeamBaseCount(i) > 0 {
