@@ -9,10 +9,11 @@ import (
   "github.com/rs/cors"
   "./gamemap"
   "./gameplay"
+  "os"
 )
 
-const maps_folder = "./maps/"
-const ais_folder  = "./AIs/"
+var maps_folder = "./maps/"
+var ais_folder  = "./AIs/"
 
 func testPost(w http.ResponseWriter, req *http.Request) {
   decoder := json.NewDecoder(req.Body)
@@ -91,12 +92,12 @@ func PlayTurn(w http.ResponseWriter, req *http.Request) {
 }
 
 func main() {
-  // http.HandleFunc("/", MapsandAIsList)
-  // http.HandleFunc("/test-connection", TestConnection)
-  // // http.HandleFunc("/play", test)
-  // // http.HandleFunc("/add-ai/file", test)
-  // // http.HandleFunc("/add-map/file", test)
-  // // http.HandleFunc("/add-map/json", test)
+  args := os.Args
+
+  if len(args) == 3 {
+    maps_folder = args[1]
+    ais_folder  = args[2]
+  }
   mux := http.NewServeMux()
   mux.HandleFunc("/",                HomePage)
   mux.HandleFunc("/maps",            MapsList)
